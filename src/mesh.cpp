@@ -7,4 +7,6 @@ void LoadMeshes(State *state)
     // for the entire application
 
     // textures will likely have to be streamed though
+    // or perhaps we can compress them enough to fit all the needed
+    // textures for a level into vram at level load.
 }
