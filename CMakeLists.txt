@@ -13,7 +13,7 @@ set_target_properties(SDL3 PROPERTIES
 	IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/SDL3.dll"
 	)
 
-add_executable(main src/main.cpp)
+add_executable(main src/main.cpp src/cgltf.cpp)
 
 target_include_directories(main PRIVATE include)
 
