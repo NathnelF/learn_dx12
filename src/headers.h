@@ -7,6 +7,7 @@
 #include <wrl/client.h>
 
 #include "SDL3/SDL.h"
+#include "cgltf.h"
 
 #include "debug.h"
 #include "types.h"
@@ -27,6 +28,28 @@ struct Frame
     ID3D12CommandAllocator *allocator;
     ID3D12GraphicsCommandList *command_list;
     u64 fence_value;
+};
+
+#define MEGA_BUFFER_SIZE megabytes(128)
+#define MAX_MESHES 128
+
+struct MeshInfo
+{
+    u32 vertex_offset;
+    u32 vertex_count;
+    u32 index_offset;
+    u32 index_count;
+};
+
+struct MeshData
+{
+    ID3D12Resource *buffer;
+
+    MeshInfo meshes[MAX_MESHES];
+    u32 mesh_count;
+
+    u32 vertex_write_position;
+    u32 index_write_position;
 };
 
 struct Context
@@ -74,4 +97,7 @@ struct State
     Context context;
     Swapchain swapchain;
     Pipeline pipeline;
+    MeshData mesh_data;
 };
+
+#define megabytes(n) ((u64)(n) * 1024 * 1024)

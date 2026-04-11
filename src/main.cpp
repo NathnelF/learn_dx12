@@ -4,6 +4,7 @@
 #include "SDL3/SDL_main.h"
 
 #include "context.cpp"
+#include "mesh.cpp"
 #include "pipeline.cpp"
 #include "render.cpp"
 #include "swapchain.cpp"
@@ -20,6 +21,8 @@ int main(int argC, char **argV)
     State state = {};
     CreateContext(&state);
     CreateSwapchainResources(&state);
+
+    LoadMeshes(&state);
     CreatePipeline(&state);
     SDL_Event event;
     int running = 1;
