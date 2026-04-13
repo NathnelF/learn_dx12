@@ -91,8 +91,29 @@ void Render(State *state, int frame_index)
     frame->command_list->IASetPrimitiveTopology(
       D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+    // just index 0 for now;
+    MeshInfo *mesh = &state->mesh_data.meshes[0];
+
+    D3D12_VERTEX_BUFFER_VIEW vbv = {
+        .BufferLocation =
+          state->mesh_data.buffer->GetGPUVirtualAddress() + mesh->vertex_offset,
+        .SizeInBytes = (u32)(mesh->vertex_count * sizeof(float) * 3),
+        .StrideInBytes = sizeof(float) * 3,
+    };
+
+    frame->command_list->IASetVertexBuffers(0, 1, &vbv);
+
+    D3D12_INDEX_BUFFER_VIEW ibv = {
+        .BufferLocation =
+          state->mesh_data.buffer->GetGPUVirtualAddress() + mesh->index_offset,
+        .SizeInBytes = (u32)(mesh->index_count * sizeof(u32)),
+        .Format = DXGI_FORMAT_R32_UINT,
+    };
+
+    frame->command_list->IASetIndexBuffer(&ibv);
+
     // draw command!
-    frame->command_list->DrawInstanced(3, 1, 0, 0);
+    frame->command_list->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
 
     // transition from render to present
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;

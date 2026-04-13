@@ -1,18 +1,19 @@
 // shaders
 
+
+struct VSInput
+{
+	float3 position : POSITION;
+};
+
 struct VSOutput
 {
 	float4 position : SV_Position;
 	float4 color : COLOR;
 };
 
-VSOutput VSMain(uint vertex_id : SV_VertexID)
+VSOutput VSMain(VSInput input)
 {
-	float2 positions[3] = {
-		float2(0.0f, 0.5f),
-		float2(0.5f, -0.5f),
-		float2(-0.5f, -0.5f),
-	};
 
 	float4 colors[3] = {
 		float4(1.0f, 0.0f, 0.0f, 1.0f),
@@ -21,8 +22,8 @@ VSOutput VSMain(uint vertex_id : SV_VertexID)
 	};
 
 	VSOutput output;
-	output.position = float4(positions[vertex_id], 0.0f, 1.0f);
-	output.color = colors[vertex_id];
+	output.position = float4(input.position, 1.0f);
+	output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	return output;
 }
 

@@ -99,11 +99,22 @@ void CreatePipelineStateObject(State *state,
                                ID3DBlob *vertex_shader,
                                ID3DBlob *pixel_shader)
 {
+    D3D12_INPUT_ELEMENT_DESC input_elements[] = {
+        {
+          .SemanticName = "POSITION",
+          .SemanticIndex = 0,
+          .Format = DXGI_FORMAT_R32G32B32_FLOAT,
+          .InputSlot = 0,
+          .AlignedByteOffset = 0,
+          .InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+          .InstanceDataStepRate = 0,
+        },
+    };
     // how is input laid out in the buffer
     // for now this is hardcoded into shader
     D3D12_INPUT_LAYOUT_DESC input_desc = {
-        .pInputElementDescs = NULL,
-        .NumElements = 0,
+        .pInputElementDescs = input_elements,
+        .NumElements = 1,
     };
 
     // rasterizer state
