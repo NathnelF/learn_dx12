@@ -50,10 +50,10 @@ int main(int argC, char **argV)
             {
                 RecreateSwapchain(&state);
             }
-            UpdateCamera(&state, dt);
-            Render(&state, frame_index);
-            frame_index = (frame_index + 1) % FRAMES;
         }
+        UpdateCamera(&state, dt);
+        Render(&state, frame_index);
+        frame_index = (frame_index + 1) % FRAMES;
     }
     return 0;
 }

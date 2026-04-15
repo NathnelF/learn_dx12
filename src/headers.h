@@ -96,12 +96,14 @@ struct Pipeline
 
 struct Camera
 {
-    HMM_Vec3 position;
+    HMM_Vec3 target;
     float yaw;
     float pitch;
+    float distance;
 
-    float speed;
-    float sensitivity;
+    float pan_speed;
+    float zoom_speed;
+    float rotate_speed;
 
     ID3D12Resource *buffer;
     void *ptr;
