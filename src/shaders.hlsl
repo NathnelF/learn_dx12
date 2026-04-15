@@ -1,5 +1,10 @@
 // shaders
+#pragma pack_matrix(column_major)
 
+cbuffer CameraConstants : register(b0)
+{
+	float4x4 mvp;
+}
 
 struct VSInput
 {
@@ -14,15 +19,8 @@ struct VSOutput
 
 VSOutput VSMain(VSInput input)
 {
-
-	float4 colors[3] = {
-		float4(1.0f, 0.0f, 0.0f, 1.0f),
-		float4(0.0f, 1.0f, 0.0f, 1.0f),
-		float4(0.0f, 0.0f, 1.0f, 1.0f),
-	};
-
 	VSOutput output;
-	output.position = float4(input.position, 1.0f);
+	output.position = mul(mvp, float4(input.position, 1.0f));
 	output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	return output;
 }

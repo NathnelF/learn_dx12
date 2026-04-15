@@ -87,9 +87,15 @@ void Render(State *state, int frame_index)
     frame->command_list->SetGraphicsRootSignature(
       state->pipeline.root_signature);
 
+    frame->command_list->SetGraphicsRootConstantBufferView(
+      0, state->camera.buffer->GetGPUVirtualAddress());
+
     // set primitive topology
     frame->command_list->IASetPrimitiveTopology(
       D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // TODO(Nate): Add a moveable camera so we can see objects rendered onto the
+    // screen!
 
     // just index 0 for now;
     MeshInfo *mesh = &state->mesh_data.meshes[0];

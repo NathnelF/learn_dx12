@@ -124,10 +124,6 @@ u32 LoadMesh(State *state, RawMesh *upload_mesh, const char *path)
     cgltf_accessor_unpack_indices(
       index_accessor, index_dest, sizeof(u32), index_count);
 
-    // TODO(Nate): upload position / indices to mega buffer
-
-    // TODO(Nate): Or dump data to a file later on
-
     u32 mesh_index = state->mesh_data.mesh_count;
     state->mesh_data.meshes[mesh_index] = {
         .vertex_offset = state->mesh_data.vertex_write_position,
@@ -279,6 +275,9 @@ void LoadMeshes(State *state)
 
     // Load meshes into staging area
     LoadMesh(state, &upload_mesh, "assets/Cube.glb");
+
+    // TODO(Nate): Eventually we want to load the mesh data into the proper
+    // format offline so we can just memcpy a file directly into vram
 
     // Transfer from staging area to VRAM
     UploadMeshToGPU(state, &upload_mesh);

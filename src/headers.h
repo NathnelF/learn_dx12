@@ -4,6 +4,8 @@
 #include <d3dcompiler.h>
 #include <dxgi1_6.h>
 
+#include "HandmadeMath.h"
+
 #include <wrl/client.h>
 
 #include "SDL3/SDL.h"
@@ -92,12 +94,31 @@ struct Pipeline
     D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view;
 };
 
+struct Camera
+{
+    HMM_Vec3 position;
+    float yaw;
+    float pitch;
+
+    float speed;
+    float sensitivity;
+
+    ID3D12Resource *buffer;
+    void *ptr;
+};
+
+struct CameraConstants
+{
+    HMM_Mat4 mvp;
+};
+
 struct State
 {
     Context context;
     Swapchain swapchain;
     Pipeline pipeline;
     MeshData mesh_data;
+    Camera camera;
 };
 
 #define megabytes(n) ((u64)(n) * 1024 * 1024)

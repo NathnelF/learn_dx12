@@ -2,9 +2,19 @@
 
 void CreateRootSignature(State *state)
 {
+
+    D3D12_ROOT_PARAMETER param = {
+        .ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV,
+        .Descriptor = {
+            .ShaderRegister = 0,
+            .RegisterSpace = 0,
+        },
+        .ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX,
+    };
+
     D3D12_ROOT_SIGNATURE_DESC desc = {
-        .NumParameters = 0,
-        .pParameters = NULL,
+        .NumParameters = 1,
+        .pParameters = &param,
         .NumStaticSamplers = 0,
         .pStaticSamplers = NULL,
         .Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,
