@@ -38,9 +38,9 @@ void CreateCameraBuffer(State *state)
     state->camera.pitch = 45.0f;
     state->camera.distance = 60.0f;
 
-    state->camera.pan_speed = 100.0f;
+    state->camera.pan_speed = 50.0f;
     state->camera.zoom_speed = 20.0f;
-    state->camera.rotate_speed = 90.0f;
+    state->camera.rotate_speed = 180.0f;
 
     debug("created camera buffer");
 }

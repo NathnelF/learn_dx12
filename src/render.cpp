@@ -1,6 +1,6 @@
 #include "headers.h"
 
-void Render(State *state, int frame_index)
+void Render3DScene(State *state, int frame_index)
 {
     // get current frame information
     Frame *frame = &state->context.frames[frame_index];
@@ -87,39 +87,54 @@ void Render(State *state, int frame_index)
     frame->command_list->SetGraphicsRootSignature(
       state->pipeline.root_signature);
 
-    frame->command_list->SetGraphicsRootConstantBufferView(
-      0, state->camera.buffer->GetGPUVirtualAddress());
-
     // set primitive topology
     frame->command_list->IASetPrimitiveTopology(
       D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    // TODO(Nate): Add a moveable camera so we can see objects rendered onto the
-    // screen!
+    // bind our camera constant buffer view as root shader resource 0
+    frame->command_list->SetGraphicsRootConstantBufferView(
+      0, state->camera.buffer->GetGPUVirtualAddress());
 
-    // just index 0 for now;
-    MeshInfo *mesh = &state->mesh_data.meshes[0];
+    // copy the transform data
+    memcpy(state->scene.ptr,
+           state->scene.transforms,
+           sizeof(HMM_Mat4) * state->scene.entity_count);
 
-    D3D12_VERTEX_BUFFER_VIEW vbv = {
-        .BufferLocation =
-          state->mesh_data.buffer->GetGPUVirtualAddress() + mesh->vertex_offset,
-        .SizeInBytes = (u32)(mesh->vertex_count * sizeof(float) * 3),
-        .StrideInBytes = sizeof(float) * 3,
-    };
+    // bind our entity buffer as root shader resource 1!
+    frame->command_list->SetGraphicsRootShaderResourceView(
+      1, state->scene.buffer->GetGPUVirtualAddress());
 
-    frame->command_list->IASetVertexBuffers(0, 1, &vbv);
+    // draw loop
+    for (u32 i = 0; i < state->scene.entity_count; i++)
+    {
+        // just index 0 for now;
+        MeshInfo *mesh = &state->mesh_data.meshes[state->scene.mesh_indices[i]];
 
-    D3D12_INDEX_BUFFER_VIEW ibv = {
-        .BufferLocation =
-          state->mesh_data.buffer->GetGPUVirtualAddress() + mesh->index_offset,
-        .SizeInBytes = (u32)(mesh->index_count * sizeof(u32)),
-        .Format = DXGI_FORMAT_R32_UINT,
-    };
+        D3D12_VERTEX_BUFFER_VIEW vbv = {
+            .BufferLocation = state->mesh_data.buffer->GetGPUVirtualAddress() +
+                              mesh->vertex_offset,
+            .SizeInBytes = (u32)(mesh->vertex_count * sizeof(float) * 3),
+            .StrideInBytes = sizeof(float) * 3,
+        };
 
-    frame->command_list->IASetIndexBuffer(&ibv);
+        frame->command_list->IASetVertexBuffers(0, 1, &vbv);
 
-    // draw command!
-    frame->command_list->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
+        D3D12_INDEX_BUFFER_VIEW ibv = {
+            .BufferLocation = state->mesh_data.buffer->GetGPUVirtualAddress() +
+                              mesh->index_offset,
+            .SizeInBytes = (u32)(mesh->index_count * sizeof(u32)),
+            .Format = DXGI_FORMAT_R32_UINT,
+        };
+
+        frame->command_list->IASetIndexBuffer(&ibv);
+
+        // set our index into the transform buffer
+        frame->command_list->SetGraphicsRoot32BitConstant(2, i, 0);
+
+        // draw command!
+        frame->command_list->DrawIndexedInstanced(
+          mesh->index_count, 1, 0, 0, 0);
+    }
 
     // transition from render to present
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;

@@ -3,18 +3,40 @@
 void CreateRootSignature(State *state)
 {
 
-    D3D12_ROOT_PARAMETER param = {
-        .ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV,
-        .Descriptor = {
-            .ShaderRegister = 0,
-            .RegisterSpace = 0,
+    D3D12_ROOT_PARAMETER params[3] = {
+        {
+            //slot 0 (camera cbv)
+            .ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV,
+            .Descriptor = {
+                .ShaderRegister = 0,
+                .RegisterSpace = 0,
+            },
+            .ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX,
         },
-        .ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX,
+        {
+            //slot 1 per-entity transform buffer
+            .ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV,
+            .Descriptor = {
+                .ShaderRegister = 0,
+            },
+            .ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX,
+
+        },
+        {
+            //slot 2 32 bit constant
+            .ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS,
+            .Constants = {
+                .ShaderRegister = 1,
+                .Num32BitValues = 1,
+            },
+            .ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX,
+        },
+
     };
 
     D3D12_ROOT_SIGNATURE_DESC desc = {
-        .NumParameters = 1,
-        .pParameters = &param,
+        .NumParameters = 3,
+        .pParameters = params,
         .NumStaticSamplers = 0,
         .pStaticSamplers = NULL,
         .Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,

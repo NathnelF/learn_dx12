@@ -3,8 +3,15 @@
 
 cbuffer CameraConstants : register(b0)
 {
-	float4x4 mvp;
+	float4x4 view_projection;
+};
+
+cbuffer ObjectIndex : register(b1)
+{
+	uint object_index;
 }
+
+StructuredBuffer<float4x4> Transforms : register(t0);
 
 struct VSInput
 {
@@ -20,6 +27,8 @@ struct VSOutput
 VSOutput VSMain(VSInput input)
 {
 	VSOutput output;
+	float4x4 model = Transforms[object_index];
+	float4x4 mvp = mul(view_projection, model);
 	output.position = mul(mvp, float4(input.position, 1.0f));
 	output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	return output;

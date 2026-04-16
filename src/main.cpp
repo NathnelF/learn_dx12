@@ -8,6 +8,7 @@
 #include "mesh.cpp"
 #include "pipeline.cpp"
 #include "render.cpp"
+#include "scene.cpp"
 #include "swapchain.cpp"
 
 int main(int argC, char **argV)
@@ -26,11 +27,11 @@ int main(int argC, char **argV)
     LoadMeshes(&state);
     CreatePipeline(&state);
     CreateCameraBuffer(&state);
+    CreateSceneBuffer(&state);
+    CreateStaticScene(&state);
     SDL_Event event;
     int running = 1;
     int frame_index = 0;
-    SDL_SetWindowRelativeMouseMode(state.context.window, true);
-
     u64 freq = SDL_GetPerformanceFrequency();
     u64 last = SDL_GetPerformanceCounter();
     while (running)
@@ -51,8 +52,10 @@ int main(int argC, char **argV)
                 RecreateSwapchain(&state);
             }
         }
+        // TODO(Nate): Update game logic here
         UpdateCamera(&state, dt);
-        Render(&state, frame_index);
+        Render3DScene(&state, frame_index);
+        // TODO(Nate): 2D UI
         frame_index = (frame_index + 1) % FRAMES;
     }
     return 0;

@@ -114,6 +114,17 @@ struct CameraConstants
     HMM_Mat4 mvp;
 };
 
+#define MAX_ENTITIES 1000
+
+struct Scene3D
+{
+    u32 mesh_indices[MAX_ENTITIES];
+    HMM_Mat4 transforms[MAX_ENTITIES];
+    u32 entity_count;
+    ID3D12Resource *buffer;
+    void *ptr;
+};
+
 struct State
 {
     Context context;
@@ -121,6 +132,7 @@ struct State
     Pipeline pipeline;
     MeshData mesh_data;
     Camera camera;
+    Scene3D scene;
 };
 
 #define megabytes(n) ((u64)(n) * 1024 * 1024)
