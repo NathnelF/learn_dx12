@@ -32,14 +32,26 @@ int main(int argC, char **argV)
     SDL_Event event;
     int running = 1;
     int frame_index = 0;
+    u32 frame_count = 0;
+
     u64 freq = SDL_GetPerformanceFrequency();
     u64 last = SDL_GetPerformanceCounter();
+    u64 last_print = SDL_GetPerformanceCounter();
     while (running)
     {
 
         u64 now = SDL_GetPerformanceCounter();
         float dt = (float)(now - last) / (float)freq;
         last = now;
+
+        frame_count++;
+        float elapsed = (float)(now - last_print) / (float)freq;
+        if (elapsed >= 1.0f)
+        {
+            debug("FPS: %u\n", frame_count);
+            frame_count = 0;
+            last_print = now;
+        }
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_EVENT_QUIT)
@@ -51,6 +63,12 @@ int main(int argC, char **argV)
             {
                 RecreateSwapchain(&state);
             }
+        }
+        const bool *keys = SDL_GetKeyboardState(NULL);
+        if (keys[SDL_SCANCODE_LCTRL] && keys[SDL_SCANCODE_Q])
+        {
+            debug("quitting");
+            running = 0;
         }
         // TODO(Nate): Update game logic here
         UpdateCamera(&state, dt);

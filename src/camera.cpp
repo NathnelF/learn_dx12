@@ -62,7 +62,6 @@ static HMM_Vec3 CameraGetRight(Camera *cam, HMM_Vec3 forward)
 
 void UpdateCamera(State *state, float dt)
 {
-    debug("dt is %f", dt);
     // TODO(Nate): implement
     Camera *camera = &state->camera;
     const bool *keys = SDL_GetKeyboardState(NULL);

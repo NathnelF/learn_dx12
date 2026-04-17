@@ -44,12 +44,13 @@ void CreateStaticScene(State *state)
     HMM_Mat4 scale = HMM_Scale({ 1.0f, 1.0f, 1.0f });
     HMM_Mat4 rot_scale = HMM_MulM4(rotation, scale);
 
-    HMM_Vec3 position[5] = {
-        { 0.0f, 0.0f, 0.0f }, { 3.0f, 0.0f, 0.0f },  { -3.0f, 0.0f, 0.0f },
-        { 0.0f, 3.0f, 0.0f }, { 0.0f, -3.0f, 0.0f },
+    HMM_Vec3 position[8] = {
+        { 0.0f, 0.0f, 0.0f },  { 3.0f, 0.0f, 0.0f },   { -3.0f, 0.0f, 0.0f },
+        { 0.0f, 3.0f, 0.0f },  { 0.0f, -3.0f, 0.0f },  { 0.0f, -6.0f, 0.0f },
+        { 1.5f, -9.0f, 0.0f }, { -1.5f, -9.0f, 0.0f },
     };
 
-    for (u32 i = 0; i < 5; i++)
+    for (u32 i = 0; i < 8; i++)
     {
         HMM_Mat4 translation = HMM_Translate(position[i]);
         state->scene.mesh_indices[i] = 0;
