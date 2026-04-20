@@ -116,9 +116,18 @@ struct CameraConstants
 
 #define MAX_ENTITIES 1000
 
+struct Entity
+{
+    u32 index;
+};
+
 struct Scene3D
 {
     u32 mesh_indices[MAX_ENTITIES];
+    HMM_Vec3 positions[MAX_ENTITIES];
+    HMM_Vec3 scales[MAX_ENTITIES];
+    // Note this is only y rotation for now
+    float rotations[MAX_ENTITIES];
     HMM_Mat4 transforms[MAX_ENTITIES];
     u32 entity_count;
     ID3D12Resource *buffer;

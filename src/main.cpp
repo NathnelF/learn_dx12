@@ -48,7 +48,7 @@ int main(int argC, char **argV)
         float elapsed = (float)(now - last_print) / (float)freq;
         if (elapsed >= 1.0f)
         {
-            debug("FPS: %u\n", frame_count);
+            // debug("FPS: %u\n", frame_count);
             frame_count = 0;
             last_print = now;
         }
@@ -69,6 +69,11 @@ int main(int argC, char **argV)
         {
             debug("quitting");
             running = 0;
+        }
+        if (keys[SDL_SCANCODE_M])
+        {
+            debug("m pressed");
+            MoveEntity(&state, 2);
         }
         // TODO(Nate): Update game logic here
         UpdateCamera(&state, dt);
